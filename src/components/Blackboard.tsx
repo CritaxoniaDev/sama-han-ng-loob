@@ -20,19 +20,19 @@ export function Blackboard({ notes }: { notes: Note[] }) {
   const handleCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current
     if (!canvas) return
-  
+
     const rect = canvas.getBoundingClientRect()
     const x = event.clientX - rect.left
     const y = event.clientY - rect.top
-  
+
     // Define protected area for title and date (top 120px)
     if (y < 120) return
-  
+
     notes.forEach(note => {
       if (
-        x >= note.x && 
-        x <= note.x + 200 && 
-        y >= note.y && 
+        x >= note.x &&
+        x <= note.x + 200 &&
+        y >= note.y &&
         y <= note.y + 200
       ) {
         setSelectedNote(note)
@@ -69,11 +69,11 @@ export function Blackboard({ notes }: { notes: Note[] }) {
     ctx.textAlign = 'center'
     ctx.fillText('STICKY THOUGHTS', canvas.width / 2, 60)
 
-    const today = new Date().toLocaleDateString('en-US', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    const today = new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     })
     ctx.font = '24px "Indie Flower"'
     ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'
@@ -96,7 +96,7 @@ export function Blackboard({ notes }: { notes: Note[] }) {
       const x = Math.random() * canvas.width
       const y = Math.random() * canvas.height
       const radius = Math.random() * 30 + 10
-      
+
       ctx.beginPath()
       ctx.arc(x, y, radius, 0, Math.PI * 2)
       ctx.fillStyle = 'rgba(255, 255, 255, 0.03)'
@@ -109,12 +109,12 @@ export function Blackboard({ notes }: { notes: Note[] }) {
       const y = Math.random() * canvas.height
       const width = Math.random() * 100 + 50
       const height = Math.random() * 20 + 10
-      
+
       ctx.save()
       ctx.translate(x, y)
       ctx.rotate(Math.random() * Math.PI * 2)
       ctx.fillStyle = 'rgba(255, 255, 255, 0.01)'
-      ctx.fillRect(-width/2, -height/2, width, height)
+      ctx.fillRect(-width / 2, -height / 2, width, height)
       ctx.restore()
     }
 
@@ -123,35 +123,35 @@ export function Blackboard({ notes }: { notes: Note[] }) {
       ctx.save()
       ctx.translate(note.x, note.y)
       ctx.rotate((Math.random() * 6 - 3) * Math.PI / 180)
-      
+
       // Enhanced shadow effect
       ctx.shadowColor = 'rgba(0, 0, 0, 0.3)'
       ctx.shadowBlur = 15
       ctx.shadowOffsetX = 8
       ctx.shadowOffsetY = 8
-      
+
       // Note background with slight gradient
       const noteGradient = ctx.createLinearGradient(0, 0, 200, 200)
       noteGradient.addColorStop(0, note.color)
-      noteGradient.addColorStop(1, adjustColor(note.color, -10))
+      noteGradient.addColorStop(1, adjustColor(note.color))
       ctx.fillStyle = noteGradient
-      
+
       // Draw note with slightly rounded corners
       roundRect(ctx, 0, 0, 200, 200, 5)
-      
+
       // Note content
       ctx.shadowColor = 'transparent'
       ctx.fillStyle = '#333'
       ctx.font = `18px "${note.font}"`
-      
+
       // Word wrap text
       wrapText(ctx, note.text, 10, 30, 180, 22)
-      
+
       // Timestamp with subtle style
       ctx.font = '12px Arial'
       ctx.fillStyle = '#666'
       ctx.fillText(note.timestamp, 10, 180)
-      
+
       ctx.restore()
     })
 
@@ -172,18 +172,18 @@ export function Blackboard({ notes }: { notes: Note[] }) {
     ctx.fill()
   }
 
-  function adjustColor(color: string, amount: number): string {
-    return color
+  function adjustColor(color: string): string {
+    return color;
   }
 
   function wrapText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
     const words = text.split(' ')
     let line = ''
-    
+
     words.forEach(word => {
       const testLine = line + word + ' '
       const metrics = ctx.measureText(testLine)
-      
+
       if (metrics.width > maxWidth) {
         ctx.fillText(line, x, y)
         line = word + ' '
@@ -212,7 +212,7 @@ export function Blackboard({ notes }: { notes: Note[] }) {
           <DialogHeader>
             <DialogTitle className="text-xl mb-4">Sticky Note</DialogTitle>
           </DialogHeader>
-          <div 
+          <div
             className="p-6 rounded-lg"
             style={{
               backgroundColor: selectedNote?.color,
