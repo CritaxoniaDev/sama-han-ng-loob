@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -34,6 +35,8 @@ export default function Home() {
   const [authorName, setAuthorName] = useState('');
   const [notes, setNotes] = useState<BlackboardNote[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showAlert, setShowAlert] = useState(false)
+  const [date, setDate] = useState<Date>(new Date())
 
   useEffect(() => {
     fetchNotes();
@@ -78,6 +81,20 @@ export default function Home() {
         y: Math.random() * (600) + 120
       };
     };
+
+    const today = new Date()
+    const selectedDate = new Date(date)
+
+    if (
+      selectedDate.getDate() !== today.getDate() ||
+      selectedDate.getMonth() !== today.getMonth() ||
+      selectedDate.getFullYear() !== today.getFullYear()
+    ) {
+      setShowAlert(true)
+      return;
+    }
+
+    setIsLoading(true);
 
     const position = findSuitablePosition();
     const newNote = {
@@ -190,6 +207,32 @@ export default function Home() {
             </Button>
           </CardContent>
         </Card>
+        <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
+          <AlertDialogContent className="bg-white/95 backdrop-blur-sm border-none">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-xl font-permanent-marker bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text">
+                Cannot Add Note
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-gray-600">
+                Notes can only be added to today's board. Please select today's date to add your thoughts.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction
+                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white"
+                onClick={() => {
+                  setDate(new Date())
+                  setShowAlert(false)
+                }}
+              >
+                Go to Today
+              </AlertDialogAction>
+              <AlertDialogCancel className="bg-gray-100 text-gray-600">
+                Close
+              </AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         <div className="w-full bg-gray-800 p-4 rounded-xl shadow-2xl">
           <Blackboard notes={notes} />

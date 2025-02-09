@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Calendar } from "@/components/ui/calendar"
+import { ChalkboardCalendar } from '@/components/ChalkboardCalendar'
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog"
 
@@ -360,36 +360,9 @@ export function Blackboard({ notes }: { notes: Note[] }) {
 
           {showCalendar && (
             <div className="absolute top-20 right-4 z-50 animate-in fade-in slide-in-from-top-2 duration-300">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={handleDateSelect}
-                className="bg-[#1B3B1B] text-white border-2 border-white/20 rounded-xl shadow-2xl backdrop-blur-sm"
-                classNames={{
-                  months: "space-y-4 font-indie-flower",
-                  month: "space-y-4",
-                  caption: "flex justify-center pt-1 relative items-center text-white/90",
-                  caption_label: "text-xl font-bold font-rock-salt",
-                  nav: "space-x-1 flex items-center",
-                  nav_button: "h-8 w-8 bg-white/10 hover:bg-white/20 rounded-full transition-colors",
-                  nav_button_previous: "absolute left-1",
-                  nav_button_next: "absolute right-1",
-                  table: "w-full border-collapse space-y-1",
-                  head_row: "flex font-rock-salt text-white/60",
-                  head_cell: "text-white/60 rounded-md w-9 font-normal text-[0.8rem]",
-                  row: "flex w-full mt-2",
-                  cell: "text-center text-sm relative p-0 hover:bg-white/10 rounded-full transition-colors",
-                  day: "h-9 w-9 p-0 font-normal text-white/80 hover:bg-white/20 rounded-full transition-colors",
-                  day_selected: "bg-white/30 text-white hover:bg-white/30 focus:bg-white/30",
-                  day_today: "bg-white/10 text-white",
-                  day_outside: "text-white/40 opacity-50",
-                  day_disabled: "text-white/20",
-                  day_range_middle: "aria-selected:bg-white/20",
-                  day_hidden: "invisible",
-                }}
-              />
+              <ChalkboardCalendar onSelect={handleDateSelect} selectedDate={date} />
             </div>
-          )}
+          )}  
         </div>
 
         <canvas
