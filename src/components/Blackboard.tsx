@@ -93,7 +93,7 @@ export function Blackboard({ notes }: { notes: Note[] }) {
     // Check every minute for day change
     const interval = setInterval(checkDay, 60000)
     return () => clearInterval(interval)
-  }, [currentDay])
+  }, [currentDay, drawBlackboard])
 
   useEffect(() => {
     const canvas = canvasRef.current

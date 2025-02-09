@@ -162,7 +162,7 @@ export default function Home() {
             <CardTitle className="text-2xl bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text font-permanent-marker">
               Ipahayag ang Iyong Damdamin
             </CardTitle>
-            <p className="text-gray-500 italic text-sm">Share what's in your heart...</p>
+            <p className="text-gray-500 italic text-sm">Share what&apos;s in your heart...</p>
           </CardHeader>
 
           <CardContent className="space-y-6">
