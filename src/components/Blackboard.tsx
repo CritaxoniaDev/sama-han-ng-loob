@@ -21,20 +21,83 @@ export function Blackboard({ notes }: { notes: Note[] }) {
   const [currentDay, setCurrentDay] = useState(new Date().toDateString())
   const [date, setDate] = useState<Date>(new Date())
   const [showCalendar, setShowCalendar] = useState(false)
+  const [hiddenNotes, setHiddenNotes] = useState<string[]>([])
 
   const handleCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current
     if (!canvas) return
-
+  
     const rect = canvas.getBoundingClientRect()
     const x = event.clientX - rect.left
     const y = event.clientY - rect.top
-
-    // Define protected area for title and date (top 120px)
+  
     if (y < 120) return
-
+  
+    const clickedNote = notes.find(note => {
+      const buttonX = note.x + 180
+      const buttonY = note.y + 20
+      
+      return Math.sqrt(Math.pow(x - buttonX, 2) + Math.pow(y - buttonY, 2)) < 20
+    })
+  
+    if (clickedNote) {
+      setHiddenNotes(prev => [...prev, clickedNote.id])
+      const ctx = canvas.getContext('2d')
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        drawBlackboard(ctx, canvas.width, canvas.height, date)
+        
+        notes
+          .filter(note => !hiddenNotes.includes(note.id) && note.id !== clickedNote.id)
+          .forEach(note => {
+            ctx.save()
+            ctx.translate(note.x, note.y)
+            ctx.rotate((Math.random() * 6 - 3) * Math.PI / 180)
+  
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)'
+            ctx.shadowBlur = 15
+            ctx.shadowOffsetX = 8
+            ctx.shadowOffsetY = 8
+  
+            const noteGradient = ctx.createLinearGradient(0, 0, 200, 200)
+            noteGradient.addColorStop(0, note.color)
+            noteGradient.addColorStop(1, adjustColor(note.color))
+            ctx.fillStyle = noteGradient
+  
+            roundRect(ctx, 0, 0, 200, 200, 5)
+  
+            ctx.shadowColor = 'transparent'
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
+            ctx.beginPath()
+            ctx.arc(180, 20, 12, 0, Math.PI * 2)
+            ctx.fill()
+  
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
+            ctx.font = 'bold 16px Arial'
+            ctx.textAlign = 'center'
+            ctx.textBaseline = 'middle'
+            ctx.fillText('×', 180, 20)
+  
+            ctx.shadowColor = 'transparent'
+            ctx.fillStyle = '#333'
+            ctx.font = `18px "${note.font}"`
+            ctx.textAlign = 'left'
+  
+            wrapText(ctx, note.text, 10, 30, 180, 22)
+  
+            ctx.font = '12px Arial'
+            ctx.fillStyle = '#666'
+            ctx.fillText(note.timestamp, 10, 180)
+  
+            ctx.restore()
+          })
+      }
+      return
+    }
+  
     notes.forEach(note => {
       if (
+        !hiddenNotes.includes(note.id) &&
         x >= note.x &&
         x <= note.x + 200 &&
         y >= note.y &&
@@ -178,6 +241,8 @@ export function Blackboard({ notes }: { notes: Note[] }) {
 
     // Draw sticky notes
     filteredNotes.forEach((note) => {
+      if (hiddenNotes.includes(note.id)) return;
+
       ctx.save()
       ctx.translate(note.x, note.y)
       ctx.rotate((Math.random() * 6 - 3) * Math.PI / 180)
@@ -188,24 +253,39 @@ export function Blackboard({ notes }: { notes: Note[] }) {
       ctx.shadowOffsetX = 8
       ctx.shadowOffsetY = 8
 
-      // Note background with slight gradient
+      // Note background with gradient
       const noteGradient = ctx.createLinearGradient(0, 0, 200, 200)
       noteGradient.addColorStop(0, note.color)
       noteGradient.addColorStop(1, adjustColor(note.color))
       ctx.fillStyle = noteGradient
 
-      // Draw note with slightly rounded corners
+      // Draw note with rounded corners
       roundRect(ctx, 0, 0, 200, 200, 5)
+
+      // Draw X button
+      ctx.shadowColor = 'transparent'
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
+      ctx.beginPath()
+      ctx.arc(180, 20, 12, 0, Math.PI * 2)
+      ctx.fill()
+
+      // Draw X symbol
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
+      ctx.font = 'bold 16px Arial'
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.fillText('x', 180, 20)
 
       // Note content
       ctx.shadowColor = 'transparent'
       ctx.fillStyle = '#333'
       ctx.font = `18px "${note.font}"`
+      ctx.textAlign = 'left'
 
       // Word wrap text
       wrapText(ctx, note.text, 10, 30, 180, 22)
 
-      // Timestamp with subtle style
+      // Timestamp
       ctx.font = '12px Arial'
       ctx.fillStyle = '#666'
       ctx.fillText(note.timestamp, 10, 180)
@@ -362,7 +442,7 @@ export function Blackboard({ notes }: { notes: Note[] }) {
             <div className="absolute top-20 right-4 z-50 animate-in fade-in slide-in-from-top-2 duration-300">
               <ChalkboardCalendar onSelect={handleDateSelect} selectedDate={date} />
             </div>
-          )}  
+          )}
         </div>
 
         <canvas
