@@ -162,7 +162,7 @@ export default function Home() {
             <CardTitle className="text-2xl bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text font-permanent-marker">
               Ipahayag ang Iyong Damdamin
             </CardTitle>
-            <p className="text-gray-500 italic text-sm">Share what&apos;s in your heart...</p>
+            <p className="text-gray-500 italic text-sm">Share whats in your heart...</p>
           </CardHeader>
 
           <CardContent className="space-y-6">
@@ -214,7 +214,7 @@ export default function Home() {
                 Cannot Add Note
               </AlertDialogTitle>
               <AlertDialogDescription className="text-gray-600">
-                Notes can only be added to today's board. Please select today's date to add your thoughts.
+                Notes can only be added to todays board. Please select todays date to add your thoughts.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
