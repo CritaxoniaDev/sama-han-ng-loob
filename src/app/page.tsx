@@ -37,7 +37,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false)
   const [date, setDate] = useState<Date>(new Date())
-  const [showCalendar, setShowCalendar] = useState(false)
 
   useEffect(() => {
     fetchNotes();
@@ -125,13 +124,6 @@ export default function Home() {
     }
   };
 
-  const handleDateSelect = (newDate: Date | undefined) => {
-    if (newDate) {
-      setDate(newDate)
-      setShowCalendar(false)
-    }
-  }
-
   const isToday = (selectedDate: Date) => {
     const today = new Date()
     return (
@@ -180,7 +172,7 @@ export default function Home() {
               <CardTitle className="text-2xl bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text font-permanent-marker">
                 Ipahayag ang Iyong Damdamin
               </CardTitle>
-              <p className="text-gray-500 italic text-sm">Share what's in your heart...</p>
+              <p className="text-gray-500 italic text-sm">Share whats in your heart...</p>
             </CardHeader>
 
             <CardContent className="space-y-6">
