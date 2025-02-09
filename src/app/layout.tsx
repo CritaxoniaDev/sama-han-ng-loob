@@ -80,7 +80,7 @@ export const metadata = {
   title: 'Sama ng Loob',
   description: 'A virtual blackboard for your thoughts',
   icons: {
-    icon: '/logow.png',
+    icon: '/favicon.ico',
   },
 }
 
