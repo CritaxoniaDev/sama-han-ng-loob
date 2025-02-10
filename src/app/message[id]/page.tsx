@@ -12,7 +12,7 @@ type Props = {
     searchParams: { [key: string]: string | string[] | undefined }
 }
 
-export default function ViewMessage({ params, searchParams }: Props) {
+export default function ViewMessage({ params }: Props) {
     const [message, setMessage] = useState<Message | null>(null)
     const [loading, setLoading] = useState(true)
 
