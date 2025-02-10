@@ -5,13 +5,14 @@ import { getMessage } from '@/lib/db'
 import { Message } from '@/lib/db'
 import Image from 'next/image'
 
-interface PageProps {
+type Props = {
     params: {
         id: string
-    }
+    },
+    searchParams: { [key: string]: string | string[] | undefined }
 }
 
-export default function ViewMessage({ params }: PageProps) {
+export default function ViewMessage({ params, searchParams }: Props) {
     const [message, setMessage] = useState<Message | null>(null)
     const [loading, setLoading] = useState(true)
 
