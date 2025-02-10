@@ -12,7 +12,6 @@ import { Header } from '@/components/Header'
 export default function CreateMessage() {
     const [message, setMessage] = useState('')
     const [selectedImage, setSelectedImage] = useState<string | null>(null)
-    const [selectedSong, setSelectedSong] = useState('')
     const [generatedLink, setGeneratedLink] = useState('')
     const [selectedTheme, setSelectedTheme] = useState('romantic')
     const fileInputRef = useRef<HTMLInputElement>(null)
@@ -244,17 +243,6 @@ export default function CreateMessage() {
                                             }}
                                         />
                                     </div>
-
-                                    {selectedSong && (
-                                        <div className="mt-4 p-4 bg-white/50 rounded-lg">
-                                            <div className="flex items-center gap-3">
-                                                <span className="text-2xl">🎵</span>
-                                                <span className="font-medium text-purple-600">
-                                                    {selectedSong}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    )}
                                 </div>
 
                                 <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
