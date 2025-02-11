@@ -11,7 +11,6 @@ import confetti from 'canvas-confetti'
 import Image from 'next/image'
 import SignatureCanvas from 'react-signature-canvas'
 import { Header } from '@/components/Header'
-import SignaturePad from 'signature_pad'
 
 export default function CreateMessage() {
     const [message, setMessage] = useState('')
