@@ -7,7 +7,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { AuroraBackground } from "@/components/ui/aurora-background"
-import Link from "next/link"
 
 export default function Home() {
   return (

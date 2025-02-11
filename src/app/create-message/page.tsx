@@ -210,9 +210,6 @@ export default function CreateMessage() {
                                                         </div>
 
                                                         <div className="flex items-center gap-1 px-2 py-1">
-                                                            <button className="p-1.5 hover:bg-purple-50 rounded-lg transition-colors" title="Quote">
-                                                                <span className="text-lg">"</span>
-                                                            </button>
                                                             <button className="p-1.5 hover:bg-purple-50 rounded-lg transition-colors" title="Code">
                                                                 <span className="font-mono text-sm">{`<>`}</span>
                                                             </button>
