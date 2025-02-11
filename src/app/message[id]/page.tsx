@@ -5,14 +5,16 @@ import { getMessage } from '@/lib/db'
 import { Message } from '@/lib/db'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
+import { useParams } from 'next/navigation'
 
-export default function ViewMessage({ params }: { params: { id: string } }) {
+export default function ViewMessage() {
+    const params = useParams()
     const [message, setMessage] = useState<Message | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const fetchMessage = async () => {
-            const data = await getMessage(params.id)
+            const data = await getMessage(params.id as string)
             setMessage(data)
             setLoading(false)
         }
