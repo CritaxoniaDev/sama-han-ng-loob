@@ -11,6 +11,7 @@ import confetti from 'canvas-confetti'
 import Image from 'next/image'
 import SignatureCanvas from 'react-signature-canvas'
 import { Header } from '@/components/Header'
+import SignaturePad from 'signature_pad'
 
 export default function CreateMessage() {
     const [message, setMessage] = useState('')
@@ -20,7 +21,7 @@ export default function CreateMessage() {
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [recipient, setRecipient] = useState('')
     const [signature, setSignature] = useState<string | null>(null)
-    const signatureRef = useRef<any>(null)
+    const signatureRef = useRef<SignatureCanvas>(null)
 
     const themes = [
         { id: 'romantic', emoji: '💝', name: 'Romantic' },
@@ -256,7 +257,8 @@ export default function CreateMessage() {
                                                             className: "w-full h-40"
                                                         }}
                                                         onEnd={() => {
-                                                            setSignature(signatureRef.current?.toDataURL())
+                                                            const dataUrl = signatureRef.current?.getTrimmedCanvas().toDataURL()
+                                                            setSignature(dataUrl || null)
                                                         }}
                                                     />
                                                 </div>

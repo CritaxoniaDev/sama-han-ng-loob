@@ -18,6 +18,8 @@
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
     "@types/quill": "^2.0.14",
+    "@types/react-signature-canvas": "^1.0.7",
+    "@types/signature_pad": "^2.3.6",
     "@types/three": "^0.173.0",
     "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.1",
@@ -32,6 +34,7 @@
     "react-dom": "^18.2.0",
     "react-quill": "^2.0.0",
     "react-signature-canvas": "^1.0.7",
+    "signature_pad": "^5.0.4",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.173.0"
