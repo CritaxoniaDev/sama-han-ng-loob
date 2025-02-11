@@ -1,271 +1,134 @@
 'use client'
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Button } from "@/components/ui/button";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { getRandomFont } from '@/utils/fonts';
-import { Blackboard, Note as BlackboardNote } from '@/components/Blackboard';
-import { addNote, getNotes } from '@/lib/db';
-import { Header } from '@/components/Header'
-
-interface Note {
-  id: string;
-  text: string;
-  x: number;
-  y: number;
-  color: string;
-  timestamp: string;
-  font: string;
-}
-
-const generatePastelColor = () => {
-  // Generate soft pastel colors with high lightness
-  const hue = Math.floor(Math.random() * 360);
-  const saturation = Math.floor(Math.random() * 30) + 60; // 60-90%
-  const lightness = Math.floor(Math.random() * 15) + 80; // 80-95%
-
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-};
+import { motion } from "framer-motion"
+import { PinContainer } from "@/components/ui/3d-pin"
+import { Header } from "@/components/Header"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { AuroraBackground } from "@/components/ui/aurora-background"
+import Link from "next/link"
 
 export default function Home() {
-  const [noteText, setNoteText] = useState('');
-  const [authorName, setAuthorName] = useState('');
-  const [notes, setNotes] = useState<BlackboardNote[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [showAlert, setShowAlert] = useState(false)
-  const [date, setDate] = useState<Date>(new Date())
-
-  useEffect(() => {
-    fetchNotes();
-  }, []);
-
-  const fetchNotes = async () => {
-    const fetchedNotes = await getNotes();
-    setNotes(fetchedNotes as Note[]);
-  };
-
-  const handleAddNote = async () => {
-    if (!noteText.trim()) return;
-    setIsLoading(true);
-
-    // Find a suitable position for the new note
-    const findSuitablePosition = () => {
-      const padding = 20; // Minimum space between notes
-      const maxAttempts = 50;
-      let attempts = 0;
-
-      while (attempts < maxAttempts) {
-        // Generate random position
-        const x = Math.random() * (window.innerWidth - 300) + padding;
-        const y = Math.random() * (600) + 120;
-
-        // Check overlap with existing notes
-        const hasSignificantOverlap = notes.some(note => {
-          const xOverlap = Math.abs(note.x - x) < 150; // Allow partial overlap
-          const yOverlap = Math.abs(note.y - y) < 150;
-          return xOverlap && yOverlap;
-        });
-
-        if (!hasSignificantOverlap) {
-          return { x, y };
-        }
-        attempts++;
-      }
-
-      // If no ideal position found, return a position with minimal overlap
-      return {
-        x: Math.random() * 300 + 20,
-        y: Math.random() * (600) + 120
-      };
-    };
-
-    const today = new Date()
-    const selectedDate = new Date(date)
-
-    if (
-      selectedDate.getDate() !== today.getDate() ||
-      selectedDate.getMonth() !== today.getMonth() ||
-      selectedDate.getFullYear() !== today.getFullYear()
-    ) {
-      setShowAlert(true)
-      return;
-    }
-
-    setIsLoading(true);
-
-    const position = findSuitablePosition();
-    const newNote = {
-      text: authorName ? `${noteText}\n- ${authorName}` : noteText,
-      x: position.x,
-      y: position.y,
-      color: generatePastelColor(),
-      timestamp: new Date().toLocaleString(),
-      font: getRandomFont()
-    };
-
-    try {
-      await addNote(newNote);
-      await fetchNotes();
-      setNoteText('');
-      setAuthorName('');
-    } catch (error) {
-      console.error('Error adding note:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && e.ctrlKey) {
-      handleAddNote();
-    }
-  };
-
-  const isToday = (selectedDate: Date) => {
-    const today = new Date()
-    return (
-      selectedDate.getDate() === today.getDate() &&
-      selectedDate.getMonth() === today.getMonth() &&
-      selectedDate.getFullYear() === today.getFullYear()
-    )
-  }
-
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-white p-8" style={{
-        backgroundImage: `
-        linear-gradient(to right, #f0f0f0 1px, transparent 1px),
-        linear-gradient(to bottom, #f0f0f0 1px, transparent 1px)
-      `,
-        backgroundSize: '20px 20px'
-      }}>
-        <main className="max-w-6xl mx-auto space-y-8">
-          <div className="text-center space-y-4 py-12">
+      <AuroraBackground>
+        <div className="container mx-auto px-4 py-24 relative z-10">
+          <motion.div
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center space-y-6"
+          >
+            <Badge variant="outline" className="mb-4 px-4 py-1 text-lg bg-white/50 backdrop-blur-sm">
+              ✨ Welcome to
+            </Badge>
+
             <h1
-              className="mb-10 text-5xl md:text-8xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 animate-gradient-x hover:scale-105 hover:rotate-1 transition-all duration-300"
+              className="text-6xl md:text-8xl font-bold text-center tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 animate-gradient-x"
               style={{
                 textShadow: `
-                2px 2px 0 #4a5568,
-                -2px -2px 0 #4a5568,
-                2px -2px 0 #4a5568,
-                -2px 2px 0 #4a5568,
-                4px 4px 8px rgba(0,0,0,0.2),
-                0 8px 16px rgba(0,0,0,0.3),
-                0 16px 32px rgba(0,0,0,0.15)
-              `,
-                transform: 'perspective(1000px) rotateX(10deg)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextStroke: '2px rgba(255,255,255,0.1)'
-              }}>
+                  2px 2px 0 #4a5568,
+                  -2px -2px 0 #4a5568,
+                  2px -2px 0 #4a5568,
+                  -2px 2px 0 #4a5568,
+                  4px 4px 8px rgba(0,0,0,0.2)
+                `
+              }}
+            >
               Sama-han ng Loob
             </h1>
-            <p className="text-gray-600 italic">
-              Paint your thoughts on our canvas ✨
+
+            <p className="text-xl text-gray-600 italic">
+              Where hearts connect and stories unfold ✨
             </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto mt-20 relative">
+            <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-8 pointer-events-none overflow-hidden">
+              {/* Main Crack Line */}
+              <div className="absolute inset-0 w-[4px] left-1/2 -translate-x-1/2 bg-gradient-to-b from-transparent via-purple-400 to-transparent opacity-40"></div>
+
+              {/* Zigzag Cracks */}
+              <div className="absolute top-[20%] left-0 w-full h-[3px] bg-gradient-to-r from-pink-400 via-purple-300 to-transparent transform -rotate-45 animate-pulse opacity-30"></div>
+              <div className="absolute top-[40%] right-0 w-full h-[3px] bg-gradient-to-l from-purple-400 via-pink-300 to-transparent transform rotate-45 animate-pulse opacity-30"></div>
+              <div className="absolute top-[60%] left-0 w-full h-[3px] bg-gradient-to-r from-pink-400 via-purple-300 to-transparent transform -rotate-45 animate-pulse opacity-30"></div>
+              <div className="absolute top-[80%] right-0 w-full h-[3px] bg-gradient-to-l from-purple-400 via-pink-300 to-transparent transform rotate-45 animate-pulse opacity-30"></div>
+
+              {/* Glowing Nodes */}
+              <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-4 h-4 bg-pink-400 rounded-full blur-[2px] animate-glow"></div>
+              <div className="absolute top-[40%] left-1/2 -translate-x-1/2 w-3 h-3 bg-purple-400 rounded-full blur-[2px] animate-glow delay-75"></div>
+              <div className="absolute top-[60%] left-1/2 -translate-x-1/2 w-4 h-4 bg-pink-400 rounded-full blur-[2px] animate-glow delay-150"></div>
+              <div className="absolute top-[80%] left-1/2 -translate-x-1/2 w-3 h-3 bg-purple-400 rounded-full blur-[2px] animate-glow delay-300"></div>
+
+              {/* Sparkle Effects */}
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white to-transparent opacity-10 animate-sparkle"></div>
+            </div>
+
+            <PinContainer
+              title="Freedom Wall"
+              href="/freedom-wall"
+              className="w-full h-[300px]"
+            >
+              <Card className="group relative overflow-hidden border-none h-full w-[300px] transition-all duration-500 hover:scale-[1.02]">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-0 group-hover:opacity-30 transition duration-1000 group-hover:duration-200" />
+
+                <CardContent className="relative p-6 bg-white/80 backdrop-blur-sm h-full flex flex-col bg-gradient-to-br from-white/90 to-white/50">
+                  <Badge className="absolute top-3 right-3 bg-purple-100 text-purple-600 hover:bg-purple-200 text-sm transform group-hover:scale-110 transition-transform duration-300">
+                    <span className="animate-pulse">✨</span> New Features
+                  </Badge>
+
+                  <h2 className="text-3xl font-permanent-marker bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3 transform group-hover:-translate-y-1 transition-transform duration-300">
+                    ✨ Freedom Wall
+                  </h2>
+
+                  <p className="text-gray-600 text-base leading-relaxed mb-4 flex-grow group-hover:text-gray-800 transition-colors duration-300">
+                    Express yourself freely and anonymously. Share your thoughts, feelings, and stories with the community.
+                  </p>
+
+                  <Button variant="ghost" className="mt-auto text-sm group-hover:bg-gradient-to-r from-purple-600 to-pink-600 group-hover:text-white transition-all duration-300">
+                    Explore Wall
+                    <span className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300">→</span>
+                  </Button>
+                </CardContent>
+
+                {/* Corner Decorations */}
+                <div className="absolute top-0 left-0 w-20 h-20 bg-gradient-to-br from-purple-600/20 to-transparent rounded-br-full transform -translate-x-full -translate-y-full group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500" />
+                <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-pink-600/20 to-transparent rounded-tl-full transform translate-x-full translate-y-full group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500" />
+              </Card>
+            </PinContainer>
+
+            <PinContainer
+              title="Create Message"
+              href="/create-message"
+              className="w-full h-[300px]"
+            >
+              <Card className="group relative overflow-hidden border-none h-full w-[300px]">
+                <CardContent className="p-6 bg-white/80 backdrop-blur-sm h-full flex flex-col">
+                  <Badge className="absolute top-3 right-3 bg-pink-100 text-pink-600 hover:bg-pink-200 text-sm">
+                    Popular ⭐
+                  </Badge>
+
+                  <h2 className="text-3xl font-permanent-marker bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
+                    ✉️ Create Message
+                  </h2>
+
+                  <p className="text-gray-600 text-base leading-relaxed mb-4 flex-grow">
+                    Craft beautiful, personalized messages for your loved ones with our magical message creator.
+                  </p>
+
+                  <Button variant="ghost" className="mt-auto text-sm">
+                    Start Creating
+                    <span className="ml-2">→</span>
+                  </Button>
+                </CardContent>
+              </Card>
+            </PinContainer>
           </div>
-
-          {isToday(date) && (
-            <Card className="bg-white/80 backdrop-blur-sm border-none shadow-2xl">
-              <CardHeader className="space-y-2">
-                <CardTitle className="text-2xl bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text font-permanent-marker">
-                  Ipahayag ang Iyong Damdamin
-                </CardTitle>
-                <p className="text-gray-500 italic text-sm">Share whats in your heart...</p>
-              </CardHeader>
-
-              <CardContent className="space-y-6">
-                <div className="relative">
-                  <Input
-                    placeholder="Pangalan mo (opsyonal)"
-                    value={authorName}
-                    onChange={(e) => setAuthorName(e.target.value)}
-                    className="bg-white/70 border-gray-200 rounded-lg pl-10 focus:ring-2 focus:ring-purple-500 transition-all duration-300"
-                  />
-                  <span className="absolute left-3 top-2.5 text-gray-400">✍️</span>
-                </div>
-
-                <div className="relative">
-                  <Textarea
-                    placeholder="Ibuhos mo ang iyong saloobin... (Ctrl + Enter para i-submit)"
-                    value={noteText}
-                    onChange={(e) => setNoteText(e.target.value)}
-                    onKeyDown={handleKeyPress}
-                    className="min-h-[150px] bg-white/70 border-gray-200 rounded-lg p-4 focus:ring-2 focus:ring-purple-500 transition-all duration-300"
-                    style={{ fontFamily: 'var(--font-indie-flower)' }}
-                  />
-                  <div className="absolute right-3 bottom-3 text-xs text-gray-400">
-                    Press Ctrl + Enter to submit
-                  </div>
-                </div>
-
-                <Button
-                  onClick={handleAddNote}
-                  disabled={isLoading || !noteText.trim()}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 rounded-lg transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-                >
-                  {isLoading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <span className="animate-spin">🎨</span> Isinasama...
-                    </span>
-                  ) : (
-                    <span className="flex items-center justify-center gap-2">
-                      ✨ Idagdag sa Canvas
-                    </span>
-                  )}
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-          <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
-            <AlertDialogContent className="bg-white/95 backdrop-blur-sm border-none">
-              <AlertDialogHeader>
-                <AlertDialogTitle className="text-xl font-permanent-marker bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text">
-                  Cannot Add Note
-                </AlertDialogTitle>
-                <AlertDialogDescription className="text-gray-600">
-                  Notes can only be added to todays board. Please select todays date to add your thoughts.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogAction
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white"
-                  onClick={() => {
-                    setDate(new Date())
-                    setShowAlert(false)
-                  }}
-                >
-                  Go to Today
-                </AlertDialogAction>
-                <AlertDialogCancel className="bg-gray-100 text-gray-600">
-                  Close
-                </AlertDialogCancel>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-
-          <div className="w-full bg-gray-800 p-4 rounded-xl shadow-2xl">
-            <Blackboard notes={notes} />
-          </div>
-        </main>
-
-        <Link href="/instructions" className="fixed bottom-4 right-4">
-          <Button
-            variant="outline"
-            className="rounded-full w-12 h-12 bg-white/80 hover:bg-white shadow-lg backdrop-blur-sm"
-          >
-            <span className="text-xl">❔</span>
-          </Button>
-        </Link>
-
-        <footer className="text-center py-8 text-sm text-gray-500">
-          Every stroke creates our masterpiece 🎨
-        </footer>
-      </div>
+        </div>
+      </AuroraBackground>
     </>
-  );
+  )
 }
