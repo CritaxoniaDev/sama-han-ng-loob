@@ -7,38 +7,32 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { AuroraBackground } from "@/components/ui/aurora-background"
+import { TextHoverEffect } from "@/components/ui/text-hover-effect"
 
 export default function Home() {
   return (
     <>
       <Header />
       <AuroraBackground>
-        <div className="container mx-auto px-4 py-24 relative z-10">
+        <div className="container mx-auto px-4 relative z-10">
           <motion.div
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center space-y-6"
           >
-            <Badge variant="outline" className="mb-4 px-4 py-1 text-lg bg-white/50 backdrop-blur-sm">
+            <Badge
+              variant="outline"
+              className="mb-[-50px] px-4 py-1 text-lg bg-white/50 backdrop-blur-sm"
+            >
               ✨ Welcome to
             </Badge>
 
-            <h1
-              className="text-6xl md:text-8xl font-bold text-center tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 animate-gradient-x"
-              style={{
-                textShadow: `
-                  2px 2px 0 #4a5568,
-                  -2px -2px 0 #4a5568,
-                  2px -2px 0 #4a5568,
-                  -2px 2px 0 #4a5568,
-                  4px 4px 8px rgba(0,0,0,0.2)
-                `
-              }}
-            >
-              Sama-han ng Loob
-            </h1>
+            <TextHoverEffect
+              text="Sama-han ng Loob"
+              duration={0.4}
+            />
 
-            <p className="text-xl text-gray-600 italic">
+            <p className="mt-[-20px] text-xl text-gray-600 tracking-tighter">
               Where hearts connect and stories unfold ✨
             </p>
           </motion.div>
@@ -69,7 +63,7 @@ export default function Home() {
               href="/freedom-wall"
               className="w-full h-[300px]"
             >
-              <Card className="group relative overflow-hidden border-none h-full w-[300px] transition-all duration-500 hover:scale-[1.02]">
+              <Card className="group relative tracking-tighter overflow-hidden border-none h-full w-[300px] transition-all duration-500 hover:scale-[1.02]">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-0 group-hover:opacity-30 transition duration-1000 group-hover:duration-200" />
@@ -79,7 +73,7 @@ export default function Home() {
                     <span className="animate-pulse">✨</span> New Features
                   </Badge>
 
-                  <h2 className="text-3xl font-permanent-marker bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3 transform group-hover:-translate-y-1 transition-transform duration-300">
+                  <h2 className="text-2xl font-permanent-marker bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3 transform group-hover:-translate-y-1 transition-transform duration-300">
                     ✨ Freedom Wall
                   </h2>
 
@@ -104,13 +98,13 @@ export default function Home() {
               href="/create-message"
               className="w-full h-[300px]"
             >
-              <Card className="group relative overflow-hidden border-none h-full w-[300px]">
+              <Card className="group tracking-tighter relative overflow-hidden border-none h-full w-[300px]">
                 <CardContent className="p-6 bg-white/80 backdrop-blur-sm h-full flex flex-col">
                   <Badge className="absolute top-3 right-3 bg-pink-100 text-pink-600 hover:bg-pink-200 text-sm">
                     Popular ⭐
                   </Badge>
 
-                  <h2 className="text-3xl font-permanent-marker bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
+                  <h2 className="text-2xl font-permanent-marker bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
                     ✉️ Create Message
                   </h2>
 
