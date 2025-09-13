@@ -14,6 +14,7 @@ import {
   Marck_Script
 } from 'next/font/google'
 import './globals.css'
+import Providers from './providers'
 
 const inter = Inter({ subsets: ['latin'] })
 const permanentMarker = Permanent_Marker({ 
@@ -90,7 +91,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`
         ${inter.className}
         ${rockSalt.variable}
@@ -105,8 +106,12 @@ export default function RootLayout({
         ${sacramento.variable}
         ${satisfy.variable}
         ${marckScript.variable}
+      tracking-tighter antialiased
+      bg-gradient-to-br from-primary/10 via-accent/5 to-background
+      dark:from-primary/50 dark:via-accent/30 dark:to-background
+      transition-colors duration-500
       `}>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   )
